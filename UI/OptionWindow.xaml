@@ -1,0 +1,86 @@
+﻿<Window x:Class="SlightPenLighter.UI.OptionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="clr-namespace:SlightPenLighter.UI"
+        x:Name="Window"
+        Title="OptionWindow"
+        Width="400"
+        Height="380"
+        Initialized="OptionWindow_OnInitialized"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None">
+    <Border BorderThickness="1">
+        <Border.Style>
+            <Style TargetType="Border">
+                <Setter Property="BorderBrush" Value="Black" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ElementName=Window, Path=IsActive}" Value="False">
+                        <Setter Property="BorderBrush" Value="DarkGray" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+        <DockPanel>
+            <Border BorderBrush="Black"
+                    BorderThickness="0 0 0 0"
+                    DockPanel.Dock="Top">
+                <DockPanel Margin="1">
+                    <ui:WindowControl VerticalAlignment="Top"
+                                      Background="White"
+                                      DockPanel.Dock="Right"
+                                      Header="PEN LIGHTER OPTIONS"
+                                      ParentWindow="{Binding ElementName=Window}" />
+                </DockPanel>
+            </Border>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="7*" />
+                    <RowDefinition Height="2*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.RowSpan="2">
+                    <Border Height="120"
+                            Margin="10"
+                            BorderBrush="Black"
+                            BorderThickness="0">
+                        <Grid ClipToBounds="True">
+                            <TextBlock Margin="-50 -7"
+                                       Background="White"
+                                       FontSize="12"
+                                       Text="Nunc sapien velit, congue auctor fermentum in, congue eget augue. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus et suscipit sem. Donec egestas ipsum lacus, at condimentum velit pulvinar eget. Aenean lacinia ut urna quis dapibus. Vivamus condimentum tincidunt orci. In pretium, massa id luctus ultrices, elit urna dictum nulla, eget vehicula nunc tellus vitae velit. Vestibulum porta sollicitudin condimentum. Morbi fermentum vestibulum tincidunt. Morbi euismod sem sit amet pellentesque tincidunt. Donec nec imperdiet enim. Ut non mollis lacus. Vivamus porta justo nec nunc molestie pellentesque. Nunc sapien velit, congue auctor fermentum in, congue eget augue. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia ut urna quis dapibus."
+                                       TextAlignment="Left"
+                                       TextWrapping="Wrap" />
+                            <Canvas x:Name="Canvas"
+                                    Width="120"
+                                    Height="120"
+                                    Background="Transparent" />
+                        </Grid>
+                    </Border>
+                    <DockPanel Margin="5 0">
+                        <Label Width="50"
+                               HorizontalContentAlignment="Right"
+                               Content="Size" />
+                        <Label Width="30"
+                               Content="{Binding ElementName=SSlider,
+                                                 Path=Value}"
+                               DockPanel.Dock="Right" />
+                        <Slider x:Name="SSlider"
+                                Margin="5 3 10 0"
+                                IsSnapToTickEnabled="True"
+                                Maximum="100"
+                                Minimum="0"
+                                Value="{Binding Path=Size}" />
+                    </DockPanel>
+                    <ui:ColorPicker x:Name="Picker" Margin="5 0" />
+                </StackPanel>
+                <Grid Row="1">
+                    <Button Margin="10"
+                            Click="SaveOnClick"
+                            Content="Save" />
+                    <Grid Grid.Row="1" />
+                </Grid>
+            </Grid>
+        </DockPanel>
+    </Border>
+</Window>
