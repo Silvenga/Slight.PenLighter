@@ -1,10 +1,9 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Threading;
-
 using SlightPenLighter.Hooks;
-
 using Application = System.Windows.Application;
 
 namespace SlightPenLighter.UI {
@@ -36,16 +35,26 @@ namespace SlightPenLighter.UI {
             set;
         }
 
+        public bool PulseClick
+        {
+            get { return (bool)GetValue(PulseClickProperty); }
+            set { SetValue(PulseClickProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PulseClick.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PulseClickProperty =
+            DependencyProperty.Register("PulseClick", typeof(bool), typeof(PenHighlighter), new PropertyMetadata(false));
+
         private void MainWindow_OnSourceInitialized(object sender, EventArgs e) {
 
             Dispatcher.Invoke(new Action(Target), DispatcherPriority.ContextIdle, null);
         }
 
         private void Target() {
-
+            DataContext = this;
             WindowPointer = new WindowInteropHelper(this).Handle;
             DwmHelper.SetWindowExTransparent(WindowPointer);
-            MouseTracker = new MouseTracker(WindowPointer);
+            MouseTracker = new MouseTracker(WindowPointer, this);
 
             OptionWindow = new OptionWindow(this);
         }

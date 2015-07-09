@@ -54,7 +54,9 @@
                             <Canvas x:Name="Canvas"
                                     Width="120"
                                     Height="120"
-                                    Background="Transparent" />
+                                    Background="Transparent">
+                                <Ellipse x:Name="Shape" />
+                            </Canvas>
                         </Grid>
                     </Border>
                     <DockPanel Margin="5 0">

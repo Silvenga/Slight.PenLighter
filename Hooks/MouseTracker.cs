@@ -1,5 +1,6 @@
 ﻿using System;
 using SlightPenLighter.Models;
+using SlightPenLighter.UI;
 
 namespace SlightPenLighter.Hooks
 {
@@ -11,15 +12,29 @@ namespace SlightPenLighter.Hooks
             set;
         }
 
-        public MouseTracker(IntPtr window)
+        public PenHighlighter Highlighter
+        {
+            get;
+            private set;
+        }
+
+        public MouseTracker(IntPtr window, PenHighlighter highlighter)
         {
             WindowPointer = window;
+            Highlighter = highlighter;
             HookManager.MouseMove += HookManagerOnMouseMove;
+            HookManager.MouseClick += HookManagerOnMouseClick;
         }
 
         private void HookManagerOnMouseMove(PhysicalPoint next)
         {
             DwmHelper.MoveWindow(WindowPointer, next.X, next.Y);
+        }
+
+        private void HookManagerOnMouseClick()
+        {
+            Highlighter.PulseClick = true;
+            Highlighter.Dispatcher.Invoke(() => Highlighter.PulseClick = false, System.Windows.Threading.DispatcherPriority.Background);
         }
     }
 }
