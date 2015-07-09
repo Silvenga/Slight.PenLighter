@@ -19,10 +19,14 @@ namespace SlightPenLighter.Hooks
         private static extern int UnhookWindowsHookEx(int idHook);
 
         private const int WhMouseLl = 14;
+        private const int WM_LBUTTONDOWN = 0x0201;
+        private const int WM_RBUTTONDOWN = 0x0204;
 
         public delegate void MousePointChange(PhysicalPoint physicalPoint);
+        public delegate void MouseClickHandler();
 
         private static event MousePointChange MouseMoveBackend;
+        private static event MouseClickHandler MouseClickBackend;
 
         public static event MousePointChange MouseMove
         {
@@ -39,6 +43,21 @@ namespace SlightPenLighter.Hooks
             }
         }
 
+        public static event MouseClickHandler MouseClick
+        {
+            add
+            {
+                EnsureSubscribedToGlobalMouseEvents();
+                MouseClickBackend += value;
+            }
+
+            remove
+            {
+                MouseClickBackend -= value;
+                TryUnsubscribeFromGlobalMouseEvents();
+            }
+        }
+
         private delegate int Hook(int nCode, int wParam, IntPtr lParam);
 
         private static Hook _mouseDelegate;
@@ -49,7 +68,6 @@ namespace SlightPenLighter.Hooks
 
         private static int MouseHookProc(int nCode, int wParam, IntPtr lParam)
         {
-
             if (nCode >= 0)
             {
                 var mouseHook = (MouseHook)Marshal.PtrToStructure(lParam, typeof(MouseHook));
@@ -62,6 +80,14 @@ namespace SlightPenLighter.Hooks
                         _oldY = mouseHook.PhysicalPoint.Y;
 
                         MouseMoveBackend.Invoke(mouseHook.PhysicalPoint);
+                    }
+                }
+
+                if(MouseClickBackend != null)
+                {
+                    if(wParam == WM_LBUTTONDOWN || wParam == WM_RBUTTONDOWN)
+                    {
+                        MouseClickBackend.Invoke();
                     }
                 }
             }
@@ -86,7 +112,7 @@ namespace SlightPenLighter.Hooks
 
         private static void TryUnsubscribeFromGlobalMouseEvents()
         {
-            if (MouseMoveBackend == null)
+            if (MouseMoveBackend == null && MouseClickBackend == null)
             {
                 ForceUnsunscribeFromGlobalMouseEvents();
             }
