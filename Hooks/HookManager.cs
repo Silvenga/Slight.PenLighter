@@ -21,6 +21,7 @@ namespace SlightPenLighter.Hooks
         private const int WhMouseLl = 14;
         private const int WM_LBUTTONDOWN = 0x0201;
         private const int WM_RBUTTONDOWN = 0x0204;
+        private const int WM_MBUTTONDOWN = 0x0207;
 
         public delegate void MousePointChange(PhysicalPoint physicalPoint);
         public delegate void MouseClickHandler();
@@ -83,11 +84,15 @@ namespace SlightPenLighter.Hooks
                     }
                 }
 
-                if(MouseClickBackend != null)
+                if (MouseClickBackend != null)
                 {
-                    if(wParam == WM_LBUTTONDOWN || wParam == WM_RBUTTONDOWN)
+                    switch (wParam)
                     {
-                        MouseClickBackend.Invoke();
+                        case WM_LBUTTONDOWN:
+                        case WM_RBUTTONDOWN:
+                        case WM_MBUTTONDOWN:
+                            MouseClickBackend.Invoke();
+                            break;
                     }
                 }
             }
