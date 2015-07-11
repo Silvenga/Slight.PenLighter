@@ -1,12 +1,10 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace SlightPenLighter.Models {
-
+namespace SlightPenLighter.Models
+{
     [StructLayout(LayoutKind.Sequential)]
-    public struct MouseHook {
-
+    public struct MouseHook
+    {
         public PhysicalPoint PhysicalPoint;
-
     }
-
 }

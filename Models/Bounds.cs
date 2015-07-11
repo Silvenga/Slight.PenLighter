@@ -1,10 +1,10 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace SlightPenLighter.Models {
-
+namespace SlightPenLighter.Models
+{
     [StructLayout(LayoutKind.Sequential)]
-    public struct Bounds {
-
+    public struct Bounds
+    {
         // ReSharper disable UnassignedField.Global
         // ReSharper disable FieldCanBeMadeReadOnly.Global
         public int Left;
@@ -14,5 +14,4 @@ namespace SlightPenLighter.Models {
         // ReSharper restore FieldCanBeMadeReadOnly.Global
         // ReSharper restore UnassignedField.Global
     }
-
 }

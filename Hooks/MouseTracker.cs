@@ -2,26 +2,21 @@
 
 using SlightPenLighter.Models;
 
-namespace SlightPenLighter.Hooks {
+namespace SlightPenLighter.Hooks
+{
+    public class MouseTracker
+    {
+        public IntPtr WindowPointer { get; set; }
 
-    public class MouseTracker {
-
-        public IntPtr WindowPointer {
-            get;
-            set;
-        }
-
-        public MouseTracker(IntPtr window) {
-
+        public MouseTracker(IntPtr window)
+        {
             WindowPointer = window;
             HookManager.MouseMove += HookManagerOnMouseMove;
         }
 
-        private void HookManagerOnMouseMove(PhysicalPoint next) {
-
+        private void HookManagerOnMouseMove(PhysicalPoint next)
+        {
             DwmHelper.MoveWindow(WindowPointer, next.X, next.Y);
         }
-
     }
-
 }

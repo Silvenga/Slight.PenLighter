@@ -7,10 +7,10 @@ using System.Windows.Interop;
 
 using SlightPenLighter.Models;
 
-namespace SlightPenLighter.Hooks {
-
-    public static class DwmHelper {
-
+namespace SlightPenLighter.Hooks
+{
+    public static class DwmHelper
+    {
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
@@ -34,41 +34,47 @@ namespace SlightPenLighter.Hooks {
         private const int WsExTransparent = 0x00000020;
         private const int GwlExstyle = -20;
 
-        public static void DropShadowToWindow(Window window) {
-
-            if(!DropShadow(window))
+        public static void DropShadowToWindow(Window window)
+        {
+            if (!DropShadow(window))
+            {
                 window.SourceInitialized += WindowInitialized;
+            }
         }
 
-        public static Point PixelsToPoints(double x, double y) {
-
+        public static Point PixelsToPoints(double x, double y)
+        {
             var currentScreen = Screen.PrimaryScreen;
 
-            return new Point {
+            return new Point
+            {
                 X = x * SystemParameters.WorkArea.Width / currentScreen.WorkingArea.Width,
                 Y = y * SystemParameters.WorkArea.Height / currentScreen.WorkingArea.Height
             };
         }
 
-        private static void WindowInitialized(object sender, EventArgs e) {
-
+        private static void WindowInitialized(object sender, EventArgs e)
+        {
             var window = (Window) sender;
             DropShadow(window);
             window.SourceInitialized -= WindowInitialized;
         }
 
-        private static bool DropShadow(Window window) {
-
-            try {
-
+        private static bool DropShadow(Window window)
+        {
+            try
+            {
                 var helper = new WindowInteropHelper(window);
                 var attrValue = 2;
                 var attribute = DwmSetWindowAttribute(helper.Handle, 2, ref attrValue, 4);
 
-                if(attribute != 0)
+                if (attribute != 0)
+                {
                     return false;
+                }
 
-                var margins = new Margins {
+                var margins = new Margins
+                {
                     Bottom = 0,
                     Left = 0,
                     Right = 0,
@@ -76,21 +82,21 @@ namespace SlightPenLighter.Hooks {
                 };
 
                 return DwmExtendFrameIntoClientArea(helper.Handle, ref margins) == 0;
-
-            } catch {
-
+            }
+            catch
+            {
                 return false;
             }
         }
 
-        public static void SetWindowExTransparent(IntPtr hwnd) {
-
+        public static void SetWindowExTransparent(IntPtr hwnd)
+        {
             var style = GetWindowLong(hwnd, GwlExstyle);
             SetWindowLong(hwnd, GwlExstyle, style | WsExTransparent);
         }
 
-        public static void MoveWindow(IntPtr id, int x, int y) {
-
+        public static void MoveWindow(IntPtr id, int x, int y)
+        {
             var rect = new Bounds();
             GetWindowRect(id, ref rect);
 
@@ -102,7 +108,5 @@ namespace SlightPenLighter.Hooks {
 
             MoveWindow(id, x, y, width, height, true);
         }
-
     }
-
 }

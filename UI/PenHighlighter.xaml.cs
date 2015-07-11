@@ -7,37 +7,22 @@ using SlightPenLighter.Hooks;
 
 using Application = System.Windows.Application;
 
-namespace SlightPenLighter.UI {
+namespace SlightPenLighter.UI
+{
+    public partial class PenHighlighter
+    {
+        private MouseTracker MouseTracker { get; set; }
 
-    public partial class PenHighlighter {
+        private static IntPtr WindowPointer { get; set; }
 
-        private MouseTracker MouseTracker {
-            get;
-            set;
-        }
+        private OptionWindow OptionWindow { get; set; }
 
-        private static IntPtr WindowPointer {
-            get;
-            set;
-        }
+        private bool AutoHide { get; set; }
 
-        private OptionWindow OptionWindow {
-            get;
-            set;
-        }
+        private NotifyIcon NotifyIcon { get; set; }
 
-        private bool AutoHide {
-            get;
-            set;
-        }
-
-        private NotifyIcon NotifyIcon {
-            get;
-            set;
-        }
-
-        public PenHighlighter() {
-
+        public PenHighlighter()
+        {
             InitializeComponent();
 
             CreateIcon();
@@ -46,13 +31,13 @@ namespace SlightPenLighter.UI {
             Left = 0;
         }
 
-        private void MainWindow_OnSourceInitialized(object sender, EventArgs e) {
-
+        private void MainWindow_OnSourceInitialized(object sender, EventArgs e)
+        {
             Dispatcher.Invoke(new Action(Target), DispatcherPriority.ContextIdle, null);
         }
 
-        private void Target() {
-
+        private void Target()
+        {
             WindowPointer = new WindowInteropHelper(this).Handle;
             DwmHelper.SetWindowExTransparent(WindowPointer);
             MouseTracker = new MouseTracker(WindowPointer);
@@ -60,9 +45,10 @@ namespace SlightPenLighter.UI {
             OptionWindow = new OptionWindow(this);
         }
 
-        private void CreateIcon() {
-
-            NotifyIcon = new NotifyIcon {
+        private void CreateIcon()
+        {
+            NotifyIcon = new NotifyIcon
+            {
                 ContextMenu = new ContextMenu(),
                 Icon = Properties.Resources.icon,
                 Text = @"Pen Highlighter",
@@ -72,24 +58,27 @@ namespace SlightPenLighter.UI {
             RefreshMenu();
         }
 
-        private void RefreshMenu() {
-
+        private void RefreshMenu()
+        {
             var menu = new ContextMenu();
 
             var optionsItem = new MenuItem("Show Options");
             optionsItem.Click += OpenOptions;
             menu.MenuItems.Add(optionsItem);
 
-            if(AutoHide) {
-
+            if (AutoHide)
+            {
                 var hideItem = new MenuItem(string.Format("{0} Highlighter", (IsVisible) ? "Hide" : "Show"));
                 hideItem.Click += VisiblityToggle;
                 menu.MenuItems.Add(hideItem);
-            } else {
-
-                var hideItem = new MenuItem(string.Format("{0} Highlighter (Automatic Mode)", (IsVisible) ? "Hide" : "Show")) {
-                    Enabled = false
-                };
+            }
+            else
+            {
+                var hideItem =
+                    new MenuItem(string.Format("{0} Highlighter (Automatic Mode)", (IsVisible) ? "Hide" : "Show"))
+                    {
+                        Enabled = false
+                    };
                 menu.MenuItems.Add(hideItem);
             }
 
@@ -104,21 +93,24 @@ namespace SlightPenLighter.UI {
             NotifyIcon.ContextMenu = menu;
         }
 
-        private void OpenOptions(object sender, EventArgs eventArgs) {
-
+        private void OpenOptions(object sender, EventArgs eventArgs)
+        {
             OptionWindow.Show();
         }
 
-        private static void Exit(object sender, EventArgs eventArgs) {
-
+        private static void Exit(object sender, EventArgs eventArgs)
+        {
             Application.Current.Shutdown(0);
         }
 
-        private void VisiblityToggle(object sender, EventArgs eventArgs) {
-
-            if(IsVisible) {
+        private void VisiblityToggle(object sender, EventArgs eventArgs)
+        {
+            if (IsVisible)
+            {
                 Hide();
-            } else {
+            }
+            else
+            {
                 Show();
             }
 
@@ -126,17 +118,21 @@ namespace SlightPenLighter.UI {
             RefreshMenu();
         }
 
-        private void AutoHideToggle(object sender, EventArgs eventArgs) {
+        private void AutoHideToggle(object sender, EventArgs eventArgs)
+        {
+            // TODO
+            // This should do something
 
-            if(AutoHide) {
+            if (AutoHide)
+            {
                 Hide();
-            } else {
+            }
+            else
+            {
                 Show();
             }
 
             RefreshMenu();
         }
-
     }
-
 }
