@@ -11,12 +11,27 @@ namespace SlightPenLighter.UI {
 
     public partial class PenHighlighter {
 
-        public MouseTracker MouseTracker {
+        private MouseTracker MouseTracker {
             get;
             set;
         }
 
-        public static IntPtr WindowPointer {
+        private static IntPtr WindowPointer {
+            get;
+            set;
+        }
+
+        private OptionWindow OptionWindow {
+            get;
+            set;
+        }
+
+        private bool AutoHide {
+            get;
+            set;
+        }
+
+        private NotifyIcon NotifyIcon {
             get;
             set;
         }
@@ -29,11 +44,6 @@ namespace SlightPenLighter.UI {
 
             Top = 0;
             Left = 0;
-        }
-
-        public OptionWindow OptionWindow {
-            get;
-            set;
         }
 
         private void MainWindow_OnSourceInitialized(object sender, EventArgs e) {
@@ -52,26 +62,46 @@ namespace SlightPenLighter.UI {
 
         private void CreateIcon() {
 
+            NotifyIcon = new NotifyIcon {
+                ContextMenu = new ContextMenu(),
+                Icon = Properties.Resources.icon,
+                Text = @"Pen Highlighter",
+                Visible = true
+            };
+
+            RefreshMenu();
+        }
+
+        private void RefreshMenu() {
+
             var menu = new ContextMenu();
 
             var optionsItem = new MenuItem("Show Options");
             optionsItem.Click += OpenOptions;
             menu.MenuItems.Add(optionsItem);
 
-            var item = new MenuItem("Show/Hide Highlighter");
-            item.Click += HideShow;
-            menu.MenuItems.Add(item);
+            if(AutoHide) {
+
+                var hideItem = new MenuItem(string.Format("{0} Highlighter", (IsVisible) ? "Hide" : "Show"));
+                hideItem.Click += VisiblityToggle;
+                menu.MenuItems.Add(hideItem);
+            } else {
+
+                var hideItem = new MenuItem(string.Format("{0} Highlighter (Automatic Mode)", (IsVisible) ? "Hide" : "Show")) {
+                    Enabled = false
+                };
+                menu.MenuItems.Add(hideItem);
+            }
+
+            var autoItem = new MenuItem(string.Format("{0} Autohide", (AutoHide) ? "Enable" : "Disable"));
+            autoItem.Click += AutoHideToggle;
+            menu.MenuItems.Add(autoItem);
 
             var exitItem = new MenuItem("Exit");
             exitItem.Click += Exit;
             menu.MenuItems.Add(exitItem);
 
-            new NotifyIcon {
-                ContextMenu = menu,
-                Icon = Properties.Resources.icon,
-                Text = @"Pen Highlighter",
-                Visible = true
-            };
+            NotifyIcon.ContextMenu = menu;
         }
 
         private void OpenOptions(object sender, EventArgs eventArgs) {
@@ -84,12 +114,27 @@ namespace SlightPenLighter.UI {
             Application.Current.Shutdown(0);
         }
 
-        private void HideShow(object sender, EventArgs eventArgs) {
+        private void VisiblityToggle(object sender, EventArgs eventArgs) {
 
-            if(IsVisible)
+            if(IsVisible) {
                 Hide();
-            else
+            } else {
                 Show();
+            }
+
+            AutoHide = IsVisible;
+            RefreshMenu();
+        }
+
+        private void AutoHideToggle(object sender, EventArgs eventArgs) {
+
+            if(AutoHide) {
+                Hide();
+            } else {
+                Show();
+            }
+
+            RefreshMenu();
         }
 
     }

@@ -32,12 +32,12 @@ namespace SlightPenLighter.Models {
             set;
         }
 
-        public static void SerializeObject(string filename, Save objectToSerialize) {
+        public static void SerializeObject(string filename, Save obj) {
 
             using(Stream stream = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Write)) {
 
-                var bFormatter = new BinaryFormatter();
-                bFormatter.Serialize(stream, objectToSerialize);
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(stream, obj);
             }
         }
 
@@ -45,8 +45,8 @@ namespace SlightPenLighter.Models {
 
             using(Stream stream = File.Open(filename, FileMode.Open, FileAccess.Read)) {
 
-                var bFormatter = new BinaryFormatter();
-                var objectToSerialize = (Save) bFormatter.Deserialize(stream);
+                var formatter = new BinaryFormatter();
+                var objectToSerialize = (Save) formatter.Deserialize(stream);
                 return objectToSerialize;
             }
         }

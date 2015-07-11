@@ -4,9 +4,6 @@ using System.Windows.Input;
 
 namespace SlightPenLighter.UI {
 
-    /// <summary>
-    /// Interaction logic for WindowControl.xaml
-    /// </summary>
     public partial class WindowControl {
 
         public WindowControl() {
