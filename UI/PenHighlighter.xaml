@@ -12,5 +12,30 @@
         ShowInTaskbar="False"
         Topmost="True"
         WindowStyle="None">
-    <Canvas x:Name="Canvas" />
+    <Window.Resources>
+        <Storyboard x:Key="storyPulse">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                             From="0"
+                             Duration="0:0:0.500" />
+            <DoubleAnimation Storyboard.TargetProperty="StrokeThickness"
+                             From="2"
+                             Duration="0:0:0.500" />
+        </Storyboard>
+        <Style x:Key="pulseStyle">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding DataContext.PulseClick, RelativeSource={RelativeSource Self}}"
+                             Value="True">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard Storyboard="{StaticResource storyPulse}" />
+                    </DataTrigger.EnterActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Canvas x:Name="Canvas">
+        <Ellipse x:Name="Shape"
+                 StrokeThickness="0"
+                 Stroke="Black"
+                 Style="{StaticResource pulseStyle}" />
+    </Canvas>
 </Window>

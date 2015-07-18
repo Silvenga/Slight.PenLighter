@@ -6,7 +6,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-
 using SlightPenLighter.Hooks;
 using SlightPenLighter.Models;
 
@@ -22,18 +21,18 @@ namespace SlightPenLighter.UI
 
         public PenHighlighter Highlighter { get; private set; }
 
-        private double _size = 30;
+        private double size = 30;
 
         public double Size
         {
-            get { return _size; }
+            get { return size; }
             set
             {
-                _size = value;
-                Shape.Height = _size;
-                Shape.Width = _size;
-                RemoteShape.Height = _size;
-                RemoteShape.Width = _size;
+                size = value;
+                Shape.Height = size;
+                Shape.Width = size;
+                RemoteShape.Height = size;
+                RemoteShape.Width = size;
                 CenterCanvasItem(Shape);
                 CenterCanvasItem(RemoteShape);
                 OnPropertyChanged();
