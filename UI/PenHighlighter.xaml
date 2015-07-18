@@ -1,6 +1,9 @@
 ﻿<Window x:Class="SlightPenLighter.UI.PenHighlighter"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="clr-namespace:SlightPenLighter.UI"
         Title="PenHighlighter"
         Width="120"
         Height="120"
@@ -11,31 +14,32 @@
         Loaded="MainWindow_OnSourceInitialized"
         ShowInTaskbar="False"
         Topmost="True"
-        WindowStyle="None">
+        WindowStyle="None"
+        d:DataContext="{d:DesignInstance ui:PenHighlighter}"
+        mc:Ignorable="d">
     <Window.Resources>
-        <Storyboard x:Key="storyPulse">
-            <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                             From="0"
-                             Duration="0:0:0.500" />
-            <DoubleAnimation Storyboard.TargetProperty="StrokeThickness"
-                             From="2"
-                             Duration="0:0:0.500" />
-        </Storyboard>
-        <Style x:Key="pulseStyle">
+        <Style x:Key="PulseStyle" TargetType="Ellipse">
+            <Setter Property="Stroke" Value="Black" />
+            <Setter Property="StrokeThickness" Value="0" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding DataContext.PulseClick, RelativeSource={RelativeSource Self}}"
-                             Value="True">
+                <DataTrigger Binding="{Binding ClickEvent}" Value="True">
                     <DataTrigger.EnterActions>
-                        <BeginStoryboard Storyboard="{StaticResource storyPulse}" />
+                        <BeginStoryboard>
+                            <Storyboard>
+
+                                <DoubleAnimation Duration="0:0:0.500"
+                                                 From="0"
+                                                 Storyboard.TargetProperty="Opacity" />
+
+                                <DoubleAnimation Duration="0:0:0.500"
+                                                 From="2"
+                                                 Storyboard.TargetProperty="StrokeThickness" />
+                            </Storyboard>
+                        </BeginStoryboard>
                     </DataTrigger.EnterActions>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    <Canvas x:Name="Canvas">
-        <Ellipse x:Name="Shape"
-                 StrokeThickness="0"
-                 Stroke="Black"
-                 Style="{StaticResource pulseStyle}" />
-    </Canvas>
+    <Canvas x:Name="Canvas" />
 </Window>

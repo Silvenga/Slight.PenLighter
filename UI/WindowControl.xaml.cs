@@ -1,9 +1,10 @@
-﻿using System.Diagnostics;
-using System.Windows;
-using System.Windows.Input;
-
-namespace SlightPenLighter.UI
+﻿namespace SlightPenLighter.UI
 {
+    using System;
+    using System.Diagnostics;
+    using System.Windows;
+    using System.Windows.Input;
+
     public partial class WindowControl
     {
         public WindowControl()
@@ -37,7 +38,14 @@ namespace SlightPenLighter.UI
         {
             if (ParentWindow != null)
             {
-                ParentWindow.DragMove();
+                try // Fixes race condition when mouse is up but even is firing
+                {
+                    ParentWindow.DragMove();
+                }
+                catch (InvalidOperationException)
+                {
+                    // ignored
+                }
             }
         }
 
@@ -59,7 +67,7 @@ namespace SlightPenLighter.UI
 
         private void Link(object sender, MouseButtonEventArgs e)
         {
-            Process.Start("https://silvenga.com");
+            Process.Start("https://silvenga.com/?penlighter=v3");
         }
     }
 }

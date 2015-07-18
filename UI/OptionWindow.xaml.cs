@@ -1,19 +1,18 @@
-﻿using System;
-using System.ComponentModel;
-using System.IO;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using SlightPenLighter.Hooks;
-using SlightPenLighter.Models;
-
-namespace SlightPenLighter.UI
+﻿namespace SlightPenLighter.UI
 {
+    using System;
+    using System.ComponentModel;
+    using System.IO;
     using System.Runtime.CompilerServices;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Media;
+    using System.Windows.Shapes;
+    using System.Windows.Threading;
 
     using SlightPenLighter.Annotations;
+    using SlightPenLighter.Hooks;
+    using SlightPenLighter.Models;
 
     public partial class OptionWindow : INotifyPropertyChanged
     {
@@ -72,10 +71,9 @@ namespace SlightPenLighter.UI
 
             RemoteShape = new Ellipse
             {
-                Fill = Picker.ColorBrush
+                Fill = Picker.ColorBrush,
+                Style = (Style) Highlighter.Resources["PulseStyle"] // TODO: Strongly type this.
             };
-
-            DataContext = this;
 
             Canvas.Children.Add(Shape);
             Highlighter.Canvas.Children.Add(RemoteShape);
@@ -91,7 +89,7 @@ namespace SlightPenLighter.UI
 
             if (file.Exists)
             {
-                var data = Save.DeserializeObject(file.FullName);
+                var data = Save.DeserializeObject(file.FullName); // TODO: Why did I use binary serialization again? Let's use JSON in the future. 
 
                 Picker.Color = new Color
                 {

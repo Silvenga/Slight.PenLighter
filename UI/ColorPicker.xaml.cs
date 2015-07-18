@@ -1,15 +1,14 @@
-﻿using System.Windows.Media;
-using System.ComponentModel;
-
-namespace SlightPenLighter.UI
+﻿namespace SlightPenLighter.UI
 {
+    using System.ComponentModel;
     using System.Runtime.CompilerServices;
+    using System.Windows.Media;
 
     using SlightPenLighter.Annotations;
 
     public partial class ColorPicker : INotifyPropertyChanged
     {
-        private readonly Color _startColor = new Color
+        private readonly Color startColor = new Color
         {
             A = 100,
             R = 255,
@@ -107,7 +106,7 @@ namespace SlightPenLighter.UI
         public ColorPicker()
         {
             InitializeComponent();
-            ColorBrush = new SolidColorBrush(_startColor);
+            ColorBrush = new SolidColorBrush(startColor);
             DataContext = this;
         }
 

@@ -1,9 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-
-namespace SlightPenLighter.Models
+﻿namespace SlightPenLighter.Models
 {
+    using System;
+    using System.IO;
+    using System.Runtime.Serialization.Formatters.Binary;
+
     [Serializable]
     public class Save
     {

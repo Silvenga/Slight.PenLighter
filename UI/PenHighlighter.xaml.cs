@@ -1,44 +1,57 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Forms;
-using System.Windows.Interop;
-using System.Windows.Threading;
-using SlightPenLighter.Hooks;
-using Application = System.Windows.Application;
-
-namespace SlightPenLighter.UI
+﻿namespace SlightPenLighter.UI
 {
-    public partial class PenHighlighter
+    using System;
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
+    using System.Windows.Forms;
+    using System.Windows.Interop;
+    using System.Windows.Threading;
+
+    using SlightPenLighter.Annotations;
+    using SlightPenLighter.Hooks;
+
+    using Application = System.Windows.Application;
+
+    public partial class PenHighlighter : INotifyPropertyChanged
     {
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private MouseTracker MouseTracker { get; set; }
 
         private static IntPtr WindowPointer { get; set; }
 
         private OptionWindow OptionWindow { get; set; }
 
-        private bool AutoHide { get; set; }
-
         private NotifyIcon NotifyIcon { get; set; }
+
+        public bool PulseClick { get; set; } // TODO: Add this to be part of the save data
+
+        private bool clickEvent;
+
+        public bool ClickEvent
+        {
+            get { return clickEvent; }
+            set
+            {
+                if (value == clickEvent || !PulseClick)
+                {
+                    return;
+                }
+                clickEvent = value;
+                OnPropertyChanged();
+            }
+        }
 
         public PenHighlighter()
         {
             InitializeComponent();
+
+            DataContext = this;
 
             CreateIcon();
 
             Top = 0;
             Left = 0;
         }
-
-        public bool PulseClick
-        {
-            get { return (bool) GetValue(PulseClickProperty); }
-            set { SetValue(PulseClickProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for PulseClick.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty PulseClickProperty =
-            DependencyProperty.Register("PulseClick", typeof(bool), typeof(PenHighlighter), new PropertyMetadata(false));
 
         private void MainWindow_OnSourceInitialized(object sender, EventArgs e)
         {
@@ -47,7 +60,6 @@ namespace SlightPenLighter.UI
 
         private void Target()
         {
-            DataContext = this;
             WindowPointer = new WindowInteropHelper(this).Handle;
             DwmHelper.SetWindowExTransparent(WindowPointer);
             MouseTracker = new MouseTracker(WindowPointer, this);
@@ -76,24 +88,12 @@ namespace SlightPenLighter.UI
             optionsItem.Click += OpenOptions;
             menu.MenuItems.Add(optionsItem);
 
-            if (AutoHide)
-            {
-                var hideItem = new MenuItem(string.Format("{0} Highlighter", (IsVisible) ? "Hide" : "Show"));
-                hideItem.Click += VisibilityToggle;
-                menu.MenuItems.Add(hideItem);
-            }
-            else
-            {
-                var hideItem =
-                    new MenuItem(string.Format("{0} Highlighter (Automatic Mode)", (IsVisible) ? "Hide" : "Show"))
-                    {
-                        Enabled = false
-                    };
-                menu.MenuItems.Add(hideItem);
-            }
+            var hideItem = new MenuItem(string.Format("{0} Highlighter", (IsVisible) ? "Hide" : "Show"));
+            hideItem.Click += VisibilityToggle;
+            menu.MenuItems.Add(hideItem);
 
-            var autoItem = new MenuItem(string.Format("{0} Autohide", (AutoHide) ? "Enable" : "Disable"));
-            autoItem.Click += AutoHideToggle;
+            var autoItem = new MenuItem(string.Format("{0} Click Pulsing", (PulseClick) ? "Disable" : "Enable"));
+            autoItem.Click += BlinkToggle;
             menu.MenuItems.Add(autoItem);
 
             var exitItem = new MenuItem("Exit");
@@ -124,25 +124,26 @@ namespace SlightPenLighter.UI
                 Show();
             }
 
-            AutoHide = IsVisible;
             RefreshMenu();
         }
 
-        private void AutoHideToggle(object sender, EventArgs eventArgs)
+        private void BlinkToggle(object sender, EventArgs eventArgs)
         {
-            // TODO
-            // This should do something
-
-            if (AutoHide)
-            {
-                Hide();
-            }
-            else
-            {
-                Show();
-            }
+            PulseClick = !PulseClick;
 
             RefreshMenu();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

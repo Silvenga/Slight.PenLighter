@@ -1,7 +1,7 @@
-﻿using System.Runtime.InteropServices;
-
-namespace SlightPenLighter.Models
+﻿namespace SlightPenLighter.Models
 {
+    using System.Runtime.InteropServices;
+
     [StructLayout(LayoutKind.Sequential)]
     public struct MouseHook
     {
