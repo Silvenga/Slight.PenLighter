@@ -18,6 +18,8 @@
         d:DataContext="{d:DesignInstance ui:PenHighlighter}"
         mc:Ignorable="d">
     <Window.Resources>
+        <!--  Used elsewhere  -->
+        <!--  ReSharper disable once Xaml.RedundantResource  -->
         <Style x:Key="PulseStyle" TargetType="Ellipse">
             <Setter Property="Stroke" Value="Black" />
             <Setter Property="StrokeThickness" Value="0" />

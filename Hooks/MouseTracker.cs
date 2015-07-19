@@ -27,8 +27,8 @@
 
         private void HookManagerOnMouseClick()
         {
-            Highlighter.PulseClick = true;
-            Highlighter.Dispatcher.Invoke(() => Highlighter.PulseClick = false, DispatcherPriority.Background);
+            Highlighter.ClickEvent = true;
+            Highlighter.Dispatcher.Invoke(() => Highlighter.ClickEvent = false, DispatcherPriority.Background);
         }
     }
 }
