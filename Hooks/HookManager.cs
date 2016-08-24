@@ -23,6 +23,7 @@ namespace SlightPenLighter.Hooks
         private const int WmMButtonDown = 519;
 
         public delegate void MousePointChange(PhysicalPoint physicalPoint);
+
         public delegate void MouseClickHandler();
 
         private static event MousePointChange MouseMoveBackend;
@@ -60,11 +61,11 @@ namespace SlightPenLighter.Hooks
 
         private delegate int Hook(int nCode, int wParam, IntPtr lParam);
 
-        private static Hook mouseDelegate;
+        private static Hook _mouseDelegate;
 
-        private static int mouseHookHandle;
-        private static int oldX;
-        private static int oldY;
+        private static int _mouseHookHandle;
+        private static int _oldX;
+        private static int _oldY;
 
         private static int MouseHookProc(int nCode, int wParam, IntPtr lParam)
         {
@@ -72,10 +73,10 @@ namespace SlightPenLighter.Hooks
             {
                 var mouseHook = (MouseHook) Marshal.PtrToStructure(lParam, typeof(MouseHook));
 
-                if (MouseMoveBackend != null && (oldX != mouseHook.PhysicalPoint.X || oldY != mouseHook.PhysicalPoint.Y))
+                if (MouseMoveBackend != null && (_oldX != mouseHook.PhysicalPoint.X || _oldY != mouseHook.PhysicalPoint.Y))
                 {
-                    oldX = mouseHook.PhysicalPoint.X;
-                    oldY = mouseHook.PhysicalPoint.Y;
+                    _oldX = mouseHook.PhysicalPoint.X;
+                    _oldY = mouseHook.PhysicalPoint.Y;
 
                     MouseMoveBackend.Invoke(mouseHook.PhysicalPoint);
                 }
@@ -93,17 +94,17 @@ namespace SlightPenLighter.Hooks
                 }
             }
 
-            return CallNextHookEx(mouseHookHandle, nCode, wParam, lParam);
+            return CallNextHookEx(_mouseHookHandle, nCode, wParam, lParam);
         }
 
         private static void EnsureSubscribedToGlobalMouseEvents()
         {
-            if (mouseHookHandle == 0)
+            if (_mouseHookHandle == 0)
             {
-                mouseDelegate = MouseHookProc;
-                mouseHookHandle = SetWindowsHookEx(WhMouseLl, mouseDelegate, IntPtr.Zero, 0);
+                _mouseDelegate = MouseHookProc;
+                _mouseHookHandle = SetWindowsHookEx(WhMouseLl, _mouseDelegate, IntPtr.Zero, 0);
 
-                if (mouseHookHandle == 0)
+                if (_mouseHookHandle == 0)
                 {
                     var status = Marshal.GetLastWin32Error();
                     throw new Win32Exception(status);
@@ -121,12 +122,12 @@ namespace SlightPenLighter.Hooks
 
         private static void ForceUnsunscribeFromGlobalMouseEvents()
         {
-            if (mouseHookHandle != 0)
+            if (_mouseHookHandle != 0)
             {
-                var result = UnhookWindowsHookEx(mouseHookHandle);
+                var result = UnhookWindowsHookEx(_mouseHookHandle);
 
-                mouseHookHandle = 0;
-                mouseDelegate = null;
+                _mouseHookHandle = 0;
+                _mouseDelegate = null;
 
                 if (result == 0)
                 {

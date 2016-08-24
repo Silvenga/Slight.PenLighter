@@ -25,18 +25,18 @@
 
         public bool PulseClick { get; set; } // TODO: Add this to be part of the save data
 
-        private bool clickEvent;
+        private bool _clickEvent;
 
         public bool ClickEvent
         {
-            get { return clickEvent; }
+            get { return _clickEvent; }
             set
             {
-                if (value == clickEvent || !PulseClick)
+                if (value == _clickEvent || !PulseClick)
                 {
                     return;
                 }
-                clickEvent = value;
+                _clickEvent = value;
                 OnPropertyChanged();
             }
         }

@@ -20,18 +20,18 @@
 
         public PenHighlighter Highlighter { get; private set; }
 
-        private double size = 30;
+        private double _size = 30;
 
         public double Size
         {
-            get { return size; }
+            get { return _size; }
             set
             {
-                size = value;
-                Shape.Height = size;
-                Shape.Width = size;
-                RemoteShape.Height = size;
-                RemoteShape.Width = size;
+                _size = value;
+                Shape.Height = _size;
+                Shape.Width = _size;
+                RemoteShape.Height = _size;
+                RemoteShape.Width = _size;
                 CenterCanvasItem(Shape);
                 CenterCanvasItem(RemoteShape);
                 OnPropertyChanged();

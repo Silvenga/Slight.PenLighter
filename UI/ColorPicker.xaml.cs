@@ -8,7 +8,7 @@
 
     public partial class ColorPicker : INotifyPropertyChanged
     {
-        private readonly Color startColor = new Color
+        private readonly Color _startColor = new Color
         {
             A = 100,
             R = 255,
@@ -106,7 +106,7 @@
         public ColorPicker()
         {
             InitializeComponent();
-            ColorBrush = new SolidColorBrush(startColor);
+            ColorBrush = new SolidColorBrush(_startColor);
             DataContext = this;
         }
 

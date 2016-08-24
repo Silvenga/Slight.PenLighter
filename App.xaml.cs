@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace SlightPenLighter
+﻿namespace SlightPenLighter
 {
     public partial class App
     {
