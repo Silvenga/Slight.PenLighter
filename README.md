@@ -1,3 +1,5 @@
+![Icon](docs/images/icon.png)
+
 # Slight.PenLighter
 
 [![AppVeyor](https://img.shields.io/appveyor/ci/Silvenga/slight-penlighter.svg?maxAge=2592000&style=flat-square)](https://ci.appveyor.com/project/Silvenga/slight-penlighter)
@@ -8,7 +10,7 @@ Released under the MIT license.
 
 ## TODO
 
-- [ ] Profile
+- [ ] Profile tracking code
 
 ## Contributors
 
