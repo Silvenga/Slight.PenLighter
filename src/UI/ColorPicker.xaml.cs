@@ -30,7 +30,7 @@
                     B = ColorBrush.Color.B,
                     G = ColorBrush.Color.G
                 };
-                OnPropertyChanged("ColorBrush");
+                OnPropertyChanged(nameof(ColorBrush));
                 OnPropertyChanged();
             }
         }
@@ -47,7 +47,7 @@
                     B = ColorBrush.Color.B,
                     G = ColorBrush.Color.G
                 };
-                OnPropertyChanged("ColorBrush");
+                OnPropertyChanged(nameof(ColorBrush));
                 OnPropertyChanged();
             }
         }
@@ -64,7 +64,7 @@
                     B = ColorBrush.Color.B,
                     G = value
                 };
-                OnPropertyChanged("ColorBrush");
+                OnPropertyChanged(nameof(ColorBrush));
                 OnPropertyChanged();
             }
         }
@@ -81,7 +81,7 @@
                     B = value,
                     G = ColorBrush.Color.G
                 };
-                OnPropertyChanged("ColorBrush");
+                OnPropertyChanged(nameof(ColorBrush));
                 OnPropertyChanged();
             }
         }
@@ -92,16 +92,16 @@
             set
             {
                 ColorBrush.Color = value;
-                OnPropertyChanged("A");
-                OnPropertyChanged("B");
-                OnPropertyChanged("G");
-                OnPropertyChanged("R");
-                OnPropertyChanged("ColorBrush");
+                OnPropertyChanged(nameof(A));
+                OnPropertyChanged(nameof(B));
+                OnPropertyChanged(nameof(G));
+                OnPropertyChanged(nameof(R));
+                OnPropertyChanged(nameof(ColorBrush));
                 OnPropertyChanged();
             }
         }
 
-        public SolidColorBrush ColorBrush { get; private set; }
+        public SolidColorBrush ColorBrush { get; }
 
         public ColorPicker()
         {
@@ -113,11 +113,7 @@
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

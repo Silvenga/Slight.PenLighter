@@ -6,6 +6,10 @@ A rewrite of PenAttention. Check out my blog post for more information: https://
 
 Released under the MIT license. 
 
-### Contributors
+## TODO
+
+- [ ] Profile
+
+## Contributors
 
 * @arthurzaczek

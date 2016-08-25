@@ -18,7 +18,7 @@
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public PenHighlighter Highlighter { get; private set; }
+        public PenHighlighter Highlighter { get; }
 
         private double _size = 30;
 
@@ -52,8 +52,8 @@
         public static void CenterCanvasItem(Shape shape)
         {
             const int halfOfCanvas = 60;
-            Canvas.SetTop(shape, (halfOfCanvas) - (shape.Height / 2));
-            Canvas.SetLeft(shape, (halfOfCanvas) - (shape.Width / 2));
+            Canvas.SetTop(shape, halfOfCanvas - shape.Height / 2);
+            Canvas.SetLeft(shape, halfOfCanvas - shape.Width / 2);
         }
 
         private void OptionWindow_OnInitialized(object sender, EventArgs e)
@@ -127,11 +127,7 @@
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

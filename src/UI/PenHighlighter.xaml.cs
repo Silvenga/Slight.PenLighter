@@ -14,7 +14,6 @@
 
     public partial class PenHighlighter : INotifyPropertyChanged
     {
-        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private MouseTracker MouseTracker { get; set; }
 
         private static IntPtr WindowPointer { get; set; }
@@ -88,11 +87,11 @@
             optionsItem.Click += OpenOptions;
             menu.MenuItems.Add(optionsItem);
 
-            var hideItem = new MenuItem(string.Format("{0} Highlighter", (IsVisible) ? "Hide" : "Show"));
+            var hideItem = new MenuItem($"{(IsVisible ? "Hide" : "Show")} Highlighter");
             hideItem.Click += VisibilityToggle;
             menu.MenuItems.Add(hideItem);
 
-            var autoItem = new MenuItem(string.Format("{0} Click Pulsing", (PulseClick) ? "Disable" : "Enable"));
+            var autoItem = new MenuItem($"{(PulseClick ? "Disable" : "Enable")} Click Pulsing");
             autoItem.Click += BlinkToggle;
             menu.MenuItems.Add(autoItem);
 
@@ -139,11 +138,7 @@
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
