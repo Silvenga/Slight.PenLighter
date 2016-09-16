@@ -8,9 +8,15 @@ A rewrite of PenAttention. Check out my blog post for more information: https://
 
 Released under the MIT license. 
 
+## Features
+
+- Scaling for mutli/high DPI screens (Surface Pros)
+- TODO Features
+
 ## TODO
 
 - [ ] Profile tracking code
+- [ ] Save click pulsing option
 
 ## Contributors
 
