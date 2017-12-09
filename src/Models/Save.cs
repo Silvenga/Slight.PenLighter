@@ -31,7 +31,7 @@ namespace SlightPenLighter.Models
 
         public static Save DeserializeObject(string filename)
         {
-            using (var stream = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Write))
+            using (var stream = File.Open(filename, FileMode.Open, FileAccess.Read))
             using (var streamReader = new StreamReader(stream))
             using (var jsonReader = new JsonTextReader(streamReader))
             {

@@ -110,7 +110,7 @@ namespace SlightPenLighter.UI
 
             if (file.Exists)
             {
-                var data = Save.DeserializeObject(file.FullName); // TODO: Why did I use binary serialization again? Let's use JSON in the future. 
+                var data = Save.DeserializeObject(file.FullName);
 
                 Picker.Color = new Color
                 {
