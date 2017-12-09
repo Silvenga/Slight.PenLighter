@@ -94,7 +94,7 @@ namespace SlightPenLighter.Hooks
             {
                 var mouseHook = (MouseHook)Marshal.PtrToStructure(lParam, typeof(MouseHook));
 
-                if (MouseMoveBackend != null && (_oldX != mouseHook.PhysicalPoint.X || _oldY != mouseHook.PhysicalPoint.Y))
+                if (MouseMoveBackend != null && mouseHook.PhysicalPoint.X != -1 && mouseHook.PhysicalPoint.Y != -1 && (_oldX != mouseHook.PhysicalPoint.X || _oldY != mouseHook.PhysicalPoint.Y))
                 {
                     _oldX = mouseHook.PhysicalPoint.X;
                     _oldY = mouseHook.PhysicalPoint.Y;
