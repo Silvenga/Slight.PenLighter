@@ -16,8 +16,12 @@ namespace SlightPenLighter.Hooks
         {
             WindowPointer = window;
             Highlighter = highlighter;
-            HookManager.MouseMove += HookManagerOnMouseMove;
-            HookManager.MouseClick += HookManagerOnMouseClick;
+
+            var hookManager = new HookManager();
+            hookManager.MouseMove += HookManagerOnMouseMove;
+            hookManager.MouseClick += HookManagerOnMouseClick;
+
+            hookManager.Start();
         }
 
         private void HookManagerOnMouseMove(PhysicalPoint next)

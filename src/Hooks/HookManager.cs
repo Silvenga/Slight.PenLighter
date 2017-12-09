@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 using SlightPenLighter.Models;
 
 namespace SlightPenLighter.Hooks
 {
-    public static class HookManager
+    public class HookManager
     {
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         private static extern int CallNextHookEx(int idHook, int nCode, int wParam, IntPtr lParam);
@@ -26,10 +28,10 @@ namespace SlightPenLighter.Hooks
 
         public delegate void MouseClickHandler();
 
-        private static event MousePointChange MouseMoveBackend;
-        private static event MouseClickHandler MouseClickBackend;
+        private event MousePointChange MouseMoveBackend;
+        private event MouseClickHandler MouseClickBackend;
 
-        public static event MousePointChange MouseMove
+        public event MousePointChange MouseMove
         {
             add
             {
@@ -44,7 +46,7 @@ namespace SlightPenLighter.Hooks
             }
         }
 
-        public static event MouseClickHandler MouseClick
+        public event MouseClickHandler MouseClick
         {
             add
             {
@@ -59,19 +61,38 @@ namespace SlightPenLighter.Hooks
             }
         }
 
+        private readonly BlockingCollection<(int nCode, int wParam, IntPtr lParam)> _eventQueue = new BlockingCollection<(int nCode, int wParam, IntPtr lParam)>();
+
         private delegate int Hook(int nCode, int wParam, IntPtr lParam);
 
-        private static Hook _mouseDelegate;
+        private Hook _mouseDelegate;
 
-        private static int _mouseHookHandle;
-        private static int _oldX;
-        private static int _oldY;
+        private int _mouseHookHandle;
+        private int _oldX;
+        private int _oldY;
 
-        private static int MouseHookProc(int nCode, int wParam, IntPtr lParam)
+        public void Start()
+        {
+            Task.Run(() =>
+            {
+                foreach ((var nCode, var wParam, var lParam) in _eventQueue.GetConsumingEnumerable())
+                {
+                    HandleEvent(nCode, wParam, lParam);
+                }
+            });
+        }
+
+        private int MouseHookProc(int nCode, int wParam, IntPtr lParam)
+        {
+            _eventQueue.Add((nCode, wParam, lParam));
+            return CallNextHookEx(_mouseHookHandle, nCode, wParam, lParam);
+        }
+
+        private void HandleEvent(int nCode, int wParam, IntPtr lParam)
         {
             if (nCode >= 0)
             {
-                var mouseHook = (MouseHook) Marshal.PtrToStructure(lParam, typeof(MouseHook));
+                var mouseHook = (MouseHook)Marshal.PtrToStructure(lParam, typeof(MouseHook));
 
                 if (MouseMoveBackend != null && (_oldX != mouseHook.PhysicalPoint.X || _oldY != mouseHook.PhysicalPoint.Y))
                 {
@@ -93,11 +114,9 @@ namespace SlightPenLighter.Hooks
                         break;
                 }
             }
-
-            return CallNextHookEx(_mouseHookHandle, nCode, wParam, lParam);
         }
 
-        private static void EnsureSubscribedToGlobalMouseEvents()
+        private void EnsureSubscribedToGlobalMouseEvents()
         {
             if (_mouseHookHandle == 0)
             {
@@ -112,7 +131,7 @@ namespace SlightPenLighter.Hooks
             }
         }
 
-        private static void TryUnsubscribeFromGlobalMouseEvents()
+        private void TryUnsubscribeFromGlobalMouseEvents()
         {
             if (MouseMoveBackend == null && MouseClickBackend == null)
             {
@@ -120,7 +139,7 @@ namespace SlightPenLighter.Hooks
             }
         }
 
-        private static void ForceUnsunscribeFromGlobalMouseEvents()
+        private void ForceUnsunscribeFromGlobalMouseEvents()
         {
             if (_mouseHookHandle != 0)
             {
