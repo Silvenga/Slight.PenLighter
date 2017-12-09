@@ -61,7 +61,7 @@ namespace SlightPenLighter.Hooks
             }
         }
 
-        private readonly BlockingCollection<(int nCode, int wParam, IntPtr lParam)> _eventQueue = new BlockingCollection<(int nCode, int wParam, IntPtr lParam)>();
+        private readonly BlockingCollection<(int nCode, int wParam, IntPtr lParam)> _eventQueue = new BlockingCollection<(int nCode, int wParam, IntPtr lParam)>(10);
 
         private delegate int Hook(int nCode, int wParam, IntPtr lParam);
 
@@ -84,7 +84,7 @@ namespace SlightPenLighter.Hooks
 
         private int MouseHookProc(int nCode, int wParam, IntPtr lParam)
         {
-            _eventQueue.Add((nCode, wParam, lParam));
+            _eventQueue.TryAdd((nCode, wParam, lParam));
             return CallNextHookEx(_mouseHookHandle, nCode, wParam, lParam);
         }
 

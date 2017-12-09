@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Threading;
@@ -53,8 +55,12 @@ namespace SlightPenLighter.Hooks
 
         private void HookManagerOnMouseClick()
         {
-            Highlighter.ClickEvent = true;
-            Highlighter.Dispatcher.Invoke(() => Highlighter.ClickEvent = false, DispatcherPriority.Background);
+            Task.Run(() =>
+            {
+                Highlighter.ClickEvent = true;
+                Thread.Sleep(5);
+                Highlighter.ClickEvent = false;
+            });
         }
     }
 }
