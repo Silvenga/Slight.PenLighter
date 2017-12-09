@@ -11,12 +11,6 @@ namespace SlightPenLighter.Hooks
 {
     public static class DwmHelper
     {
-        [DllImport("dwmapi.dll", PreserveSig = true)]
-        private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
-
-        [DllImport("dwmapi.dll")]
-        private static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref Margins pMarInset);
-
         [DllImport("user32.dll")]
         private static extern int GetWindowLong(IntPtr hwnd, int index);
 
@@ -34,14 +28,6 @@ namespace SlightPenLighter.Hooks
         private const int WsExTransparent = 0x00000020;
         private const int GwlExstyle = -20;
 
-        public static void DropShadowToWindow(Window window)
-        {
-            if (!DropShadow(window))
-            {
-                window.SourceInitialized += WindowInitialized;
-            }
-        }
-
         public static Point PixelsToPoints(double x, double y)
         {
             var currentScreen = Screen.PrimaryScreen;
@@ -51,42 +37,6 @@ namespace SlightPenLighter.Hooks
                 X = x * SystemParameters.WorkArea.Width / currentScreen.WorkingArea.Width,
                 Y = y * SystemParameters.WorkArea.Height / currentScreen.WorkingArea.Height
             };
-        }
-
-        private static void WindowInitialized(object sender, EventArgs e)
-        {
-            var window = (Window) sender;
-            DropShadow(window);
-            window.SourceInitialized -= WindowInitialized;
-        }
-
-        private static bool DropShadow(Window window)
-        {
-            try
-            {
-                var helper = new WindowInteropHelper(window);
-                var attrValue = 2;
-                var attribute = DwmSetWindowAttribute(helper.Handle, 2, ref attrValue, 4);
-
-                if (attribute != 0)
-                {
-                    return false;
-                }
-
-                var margins = new Margins
-                {
-                    Bottom = 0,
-                    Left = 0,
-                    Right = 0,
-                    Top = 0
-                };
-
-                return DwmExtendFrameIntoClientArea(helper.Handle, ref margins) == 0;
-            }
-            catch
-            {
-                return false;
-            }
         }
 
         public static void SetWindowExTransparent(IntPtr hwnd)

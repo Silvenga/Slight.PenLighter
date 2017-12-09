@@ -9,7 +9,6 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 
 using SlightPenLighter.Annotations;
-using SlightPenLighter.Hooks;
 using SlightPenLighter.Models;
 
 namespace SlightPenLighter.UI
@@ -59,7 +58,6 @@ namespace SlightPenLighter.UI
         private void OptionWindow_OnInitialized(object sender, EventArgs e)
         {
             Dispatcher.BeginInvoke(new Action(LoadLighter), DispatcherPriority.ContextIdle, null);
-            DwmHelper.DropShadowToWindow(this);
         }
 
         private void LoadLighter()
@@ -72,7 +70,7 @@ namespace SlightPenLighter.UI
             RemoteShape = new Ellipse
             {
                 Fill = Picker.ColorBrush,
-                Style = (Style) Highlighter.Resources["PulseStyle"] // TODO: Strongly type this.
+                Style = (Style)Highlighter.Resources["PulseStyle"] // TODO: Strongly type this.
             };
 
             Canvas.Children.Add(Shape);
@@ -83,7 +81,7 @@ namespace SlightPenLighter.UI
             LoadSettings();
         }
 
-        public void LoadSettings()
+        private void LoadSettings()
         {
             var file = new FileInfo("settings.db");
 
@@ -102,7 +100,7 @@ namespace SlightPenLighter.UI
             }
         }
 
-        public void SaveSettings()
+        private void SaveSettings()
         {
             var file = new FileInfo("settings.db");
 
