@@ -55,10 +55,10 @@ namespace SlightPenLighter.UI
 
         private void MainWindow_OnSourceInitialized(object sender, EventArgs e)
         {
-            Dispatcher.Invoke(new Action(Target), DispatcherPriority.ContextIdle, null);
+            Dispatcher.Invoke(new Action(OnSourceInitialized), DispatcherPriority.ContextIdle, null);
         }
 
-        private void Target()
+        private void OnSourceInitialized()
         {
             WindowPointer = new WindowInteropHelper(this).Handle;
             DwmHelper.SetWindowExTransparent(WindowPointer);

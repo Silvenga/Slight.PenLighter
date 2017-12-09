@@ -30,17 +30,17 @@ namespace SlightPenLighter.UI
             set
             {
                 _size = value;
-                Shape.Height = _size;
-                Shape.Width = _size;
+                DemoLighter.Height = _size;
+                DemoLighter.Width = _size;
                 RemoteShape.Height = _size;
                 RemoteShape.Width = _size;
-                CenterCanvasItem(Shape);
-                CenterCanvasItem(RemoteShape);
+
+                var halfOfCanvas = DemoCanvas.Height / 2;
+                Canvas.SetTop(DemoLighter, halfOfCanvas - DemoLighter.Height / 2);
+                Canvas.SetLeft(DemoLighter, halfOfCanvas - DemoLighter.Width / 2);
                 OnPropertyChanged();
             }
         }
-
-        public Shape Shape { get; private set; }
 
         public Shape RemoteShape { get; private set; }
 
@@ -71,13 +71,6 @@ namespace SlightPenLighter.UI
             DataContext = this;
         }
 
-        public static void CenterCanvasItem(Shape shape)
-        {
-            const int halfOfCanvas = 60;
-            Canvas.SetTop(shape, halfOfCanvas - shape.Height / 2);
-            Canvas.SetLeft(shape, halfOfCanvas - shape.Width / 2);
-        }
-
         private void OptionWindow_OnInitialized(object sender, EventArgs e)
         {
             Dispatcher.BeginInvoke(new Action(LoadLighter), DispatcherPriority.ContextIdle, null);
@@ -85,19 +78,10 @@ namespace SlightPenLighter.UI
 
         private void LoadLighter()
         {
-            Shape = new Ellipse
-            {
-                Fill = Picker.ColorBrush
-            };
+            DemoLighter.Fill = Picker.ColorBrush;
 
-            RemoteShape = new Ellipse
-            {
-                Fill = Picker.ColorBrush,
-                Style = (Style)Highlighter.Resources["PulseStyle"] // TODO: Strongly type this.
-            };
-
-            Canvas.Children.Add(Shape);
-            Highlighter.Canvas.Children.Add(RemoteShape);
+            RemoteShape = Highlighter.Lighter;
+            RemoteShape.Fill = Picker.ColorBrush;
 
             Size = 30;
 

@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="clr-namespace:SlightPenLighter.UI"
         Title="PenHighlighter"
-        Width="120"
-        Height="120"
+        Width="500"
+        Height="500"
         AllowsTransparency="true"
         Background="Transparent"
         ClipToBounds="False"
@@ -18,8 +18,6 @@
         d:DataContext="{d:DesignInstance ui:PenHighlighter}"
         mc:Ignorable="d">
     <Window.Resources>
-        <!--  Used elsewhere  -->
-        <!--  ReSharper disable once Xaml.RedundantResource  -->
         <Style x:Key="PulseStyle" TargetType="Ellipse">
             <Setter Property="Stroke" Value="Black" />
             <Setter Property="StrokeThickness" Value="0" />
@@ -43,5 +41,7 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    <Canvas x:Name="Canvas" />
+    <Canvas x:Name="Canvas" >
+        <Ellipse x:Name="Lighter" Style="{StaticResource PulseStyle}"/>
+    </Canvas>
 </Window>

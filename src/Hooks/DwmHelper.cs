@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Windows;
-using System.Windows.Forms;
 
 using SlightPenLighter.Models;
 
@@ -26,35 +24,23 @@ namespace SlightPenLighter.Hooks
         private const int WsExTransparent = 0x00000020;
         private const int GwlExstyle = -20;
 
-        public static Point PixelsToPoints(double x, double y)
-        {
-            var currentScreen = Screen.PrimaryScreen;
-
-            return new Point
-            {
-                X = x * SystemParameters.WorkArea.Width / currentScreen.WorkingArea.Width,
-                Y = y * SystemParameters.WorkArea.Height / currentScreen.WorkingArea.Height
-            };
-        }
-
         public static void SetWindowExTransparent(IntPtr hwnd)
         {
             var style = GetWindowLong(hwnd, GwlExstyle);
             SetWindowLong(hwnd, GwlExstyle, style | WsExTransparent);
         }
 
-        public static void MoveWindow(IntPtr id, int x, int y)
+        public static Bounds GetWindowBounds(IntPtr id)
         {
             var rect = new Bounds();
             GetWindowRect(id, ref rect);
 
-            var width = rect.Right - rect.Left;
-            var height = rect.Bottom - rect.Top;
+            return rect;
+        }
 
-            x -= width / 2;
-            y -= height / 2;
-
-            MoveWindow(id, x, y, width, height, true);
+        public static void MoveWindow(IntPtr id, int x, int y, int width, int height)
+        {
+            MoveWindow(id, x, y, width, height, false);
         }
     }
 }

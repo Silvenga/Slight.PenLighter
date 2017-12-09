@@ -18,43 +18,46 @@
 
             <StackPanel Grid.RowSpan="2">
                 <Border Height="120"
-                            Margin="10"
-                            BorderBrush="Black"
-                            BorderThickness="0">
+                        Margin="10"
+                        BorderBrush="Black"
+                        BorderThickness="0">
                     <Grid ClipToBounds="True">
                         <TextBlock Margin="-50 -7"
-                                       Background="White"
-                                       FontSize="12"
-                                       Text="Nunc sapien velit, congue auctor fermentum in, congue eget augue. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus et suscipit sem. Donec egestas ipsum lacus, at condimentum velit pulvinar eget. Aenean lacinia ut urna quis dapibus. Vivamus condimentum tincidunt orci. In pretium, massa id luctus ultrices, elit urna dictum nulla, eget vehicula nunc tellus vitae velit. Vestibulum porta sollicitudin condimentum. Morbi fermentum vestibulum tincidunt. Morbi euismod sem sit amet pellentesque tincidunt. Donec nec imperdiet enim. Ut non mollis lacus. Vivamus porta justo nec nunc molestie pellentesque. Nunc sapien velit, congue auctor fermentum in, congue eget augue. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia ut urna quis dapibus."
-                                       TextAlignment="Left"
-                                       TextWrapping="Wrap" />
-                        <Canvas x:Name="Canvas"
-                                    Width="120"
-                                    Height="120"
-                                    Background="Transparent" />
+                                   Background="White"
+                                   FontSize="12"
+                                   Text="Nunc sapien velit, congue auctor fermentum in, congue eget augue. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus et suscipit sem. Donec egestas ipsum lacus, at condimentum velit pulvinar eget. Aenean lacinia ut urna quis dapibus. Vivamus condimentum tincidunt orci. In pretium, massa id luctus ultrices, elit urna dictum nulla, eget vehicula nunc tellus vitae velit. Vestibulum porta sollicitudin condimentum. Morbi fermentum vestibulum tincidunt. Morbi euismod sem sit amet pellentesque tincidunt. Donec nec imperdiet enim. Ut non mollis lacus. Vivamus porta justo nec nunc molestie pellentesque. Nunc sapien velit, congue auctor fermentum in, congue eget augue. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia ut urna quis dapibus."
+                                   TextAlignment="Left"
+                                   TextWrapping="Wrap" />
+                        <Canvas x:Name="DemoCanvas"
+                                Width="500"
+                                Height="500"
+                                Margin="-250"
+                                Background="Transparent">
+                            <Ellipse x:Name="DemoLighter" />
+                        </Canvas>
                     </Grid>
                 </Border>
                 <DockPanel Margin="5 0">
                     <Label Width="50"
-                               HorizontalContentAlignment="Right"
-                               Content="Size" />
+                           HorizontalContentAlignment="Right"
+                           Content="Size" />
                     <Label Width="30"
-                               Content="{Binding ElementName=SSlider,
+                           Content="{Binding ElementName=SSlider,
                                                  Path=Value}"
-                               DockPanel.Dock="Right" />
+                           DockPanel.Dock="Right" />
                     <Slider x:Name="SSlider"
-                                Margin="5 3 10 0"
-                                IsSnapToTickEnabled="True"
-                                Maximum="200"
-                                Minimum="0"
-                                Value="{Binding Path=Size}" />
+                            Margin="5 3 10 0"
+                            IsSnapToTickEnabled="True"
+                            Maximum="200"
+                            Minimum="0"
+                            Value="{Binding Path=Size}" />
                 </DockPanel>
                 <ui:ColorPicker x:Name="Picker" Margin="5 0" />
             </StackPanel>
             <Grid Row="1">
                 <Button Margin="10"
-                            Click="SaveOnClick"
-                            Content="Save" />
+                        Click="SaveOnClick"
+                        Content="Save" />
             </Grid>
         </Grid>
     </DockPanel>
