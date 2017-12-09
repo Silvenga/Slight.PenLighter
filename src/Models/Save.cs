@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+
+using Newtonsoft.Json;
 
 namespace SlightPenLighter.Models
 {
@@ -20,19 +21,23 @@ namespace SlightPenLighter.Models
         public static void SerializeObject(string filename, Save obj)
         {
             using (Stream stream = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Write))
+            using (var streamWriter = new StreamWriter(stream))
+            using (var jsonWriter = new JsonTextWriter(streamWriter))
             {
-                var formatter = new BinaryFormatter();
-                formatter.Serialize(stream, obj);
+                var serializer = new JsonSerializer();
+                serializer.Serialize(jsonWriter, obj);
             }
         }
 
         public static Save DeserializeObject(string filename)
         {
-            using (Stream stream = File.Open(filename, FileMode.Open, FileAccess.Read))
+            using (var stream = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Write))
+            using (var streamReader = new StreamReader(stream))
+            using (var jsonReader = new JsonTextReader(streamReader))
             {
-                var formatter = new BinaryFormatter();
-                var objectToSerialize = (Save) formatter.Deserialize(stream);
-                return objectToSerialize;
+                var serializer = new JsonSerializer();
+                var save = serializer.Deserialize<Save>(jsonReader);
+                return save;
             }
         }
     }

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Drawing.Printing;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Interop;
 
 using SlightPenLighter.Models;
 

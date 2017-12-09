@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -10,6 +11,8 @@ using System.Windows.Threading;
 
 using SlightPenLighter.Annotations;
 using SlightPenLighter.Models;
+
+using Path = System.IO.Path;
 
 namespace SlightPenLighter.UI
 {
@@ -40,6 +43,26 @@ namespace SlightPenLighter.UI
         public Shape Shape { get; private set; }
 
         public Shape RemoteShape { get; private set; }
+
+        public string SettingsFilePath
+        {
+            get
+            {
+                string settingsFileName;
+
+                var exeFileName = new FileInfo(Process.GetCurrentProcess().MainModule.FileName);
+                if (!exeFileName.Exists || exeFileName.Directory == null)
+                {
+                    settingsFileName = exeFileName.Name + ".json";
+                }
+                else
+                {
+                    settingsFileName = Path.Combine(exeFileName.Directory.FullName, exeFileName.Name + ".json");
+                }
+
+                return settingsFileName;
+            }
+        }
 
         public OptionWindow(PenHighlighter highlighter)
         {
@@ -83,7 +106,7 @@ namespace SlightPenLighter.UI
 
         private void LoadSettings()
         {
-            var file = new FileInfo("settings.db");
+            var file = new FileInfo(SettingsFilePath);
 
             if (file.Exists)
             {
@@ -94,7 +117,7 @@ namespace SlightPenLighter.UI
                     A = data.A,
                     R = data.R,
                     G = data.G,
-                    B = data.B,
+                    B = data.B
                 };
                 Size = data.Size;
             }
@@ -102,7 +125,7 @@ namespace SlightPenLighter.UI
 
         private void SaveSettings()
         {
-            var file = new FileInfo("settings.db");
+            var file = new FileInfo(SettingsFilePath);
 
             var data = new Save
             {
