@@ -1,10 +1,10 @@
-﻿namespace SlightPenLighter.UI
-{
-    using System;
-    using System.Diagnostics;
-    using System.Windows;
-    using System.Windows.Input;
+﻿using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Input;
 
+namespace SlightPenLighter.UI
+{
     public partial class WindowControl
     {
         public WindowControl()
@@ -17,8 +17,8 @@
 
         public string Header
         {
-            get { return (string) GetValue(HeaderProperty); }
-            set { SetValue(HeaderProperty, value); }
+            get => (string) GetValue(HeaderProperty);
+            set => SetValue(HeaderProperty, value);
         }
 
         public static readonly DependencyProperty ParentWindowProperty =
@@ -30,8 +30,8 @@
 
         public Window ParentWindow
         {
-            get { return (Window) GetValue(ParentWindowProperty); }
-            set { SetValue(ParentWindowProperty, value); }
+            get => (Window) GetValue(ParentWindowProperty);
+            set => SetValue(ParentWindowProperty, value);
         }
 
         private void OnMouseDown(object sender, MouseButtonEventArgs e)

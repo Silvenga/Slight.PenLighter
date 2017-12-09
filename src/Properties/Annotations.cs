@@ -23,8 +23,8 @@ namespace SlightPenLighter.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(
-         AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
-         AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.Event)]
+        AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
+        AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.Event)]
     public sealed class CanBeNullAttribute : Attribute
     {
     }
@@ -38,8 +38,8 @@ namespace SlightPenLighter.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(
-         AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
-         AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.Event)]
+        AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
+        AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.Event)]
     public sealed class NotNullAttribute : Attribute
     {
     }
@@ -48,8 +48,8 @@ namespace SlightPenLighter.Annotations
     /// Indicates that collection or enumerable value does not contain null elements.
     /// </summary>
     [AttributeUsage(
-         AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
-         AttributeTargets.Delegate | AttributeTargets.Field)]
+        AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
+        AttributeTargets.Delegate | AttributeTargets.Field)]
     public sealed class ItemNotNullAttribute : Attribute
     {
     }
@@ -58,8 +58,8 @@ namespace SlightPenLighter.Annotations
     /// Indicates that collection or enumerable value can contain null elements.
     /// </summary>
     [AttributeUsage(
-         AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
-         AttributeTargets.Delegate | AttributeTargets.Field)]
+        AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
+        AttributeTargets.Delegate | AttributeTargets.Field)]
     public sealed class ItemCanBeNullAttribute : Attribute
     {
     }
@@ -77,8 +77,8 @@ namespace SlightPenLighter.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(
-         AttributeTargets.Constructor | AttributeTargets.Method |
-         AttributeTargets.Property | AttributeTargets.Delegate)]
+        AttributeTargets.Constructor | AttributeTargets.Method |
+        AttributeTargets.Property | AttributeTargets.Delegate)]
     public sealed class StringFormatMethodAttribute : Attribute
     {
         /// <param name="formatParameterName">

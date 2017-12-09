@@ -1,7 +1,7 @@
-﻿namespace SlightPenLighter.Models
-{
-    using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
+namespace SlightPenLighter.Models
+{
     [StructLayout(LayoutKind.Sequential)]
     public struct PhysicalPoint
     {

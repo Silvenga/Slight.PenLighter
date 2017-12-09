@@ -1,19 +1,20 @@
-﻿namespace SlightPenLighter.UI
+﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows.Forms;
+using System.Windows.Interop;
+using System.Windows.Threading;
+
+using SlightPenLighter.Annotations;
+using SlightPenLighter.Hooks;
+
+using Application = System.Windows.Application;
+
+namespace SlightPenLighter.UI
 {
-    using System;
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
-    using System.Windows.Forms;
-    using System.Windows.Interop;
-    using System.Windows.Threading;
-
-    using SlightPenLighter.Annotations;
-    using SlightPenLighter.Hooks;
-
-    using Application = System.Windows.Application;
-
     public partial class PenHighlighter : INotifyPropertyChanged
     {
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private MouseTracker MouseTracker { get; set; }
 
         private static IntPtr WindowPointer { get; set; }
@@ -28,7 +29,7 @@
 
         public bool ClickEvent
         {
-            get { return _clickEvent; }
+            get => _clickEvent;
             set
             {
                 if (value == _clickEvent || !PulseClick)

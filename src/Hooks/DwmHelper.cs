@@ -1,14 +1,14 @@
-﻿namespace SlightPenLighter.Hooks
+﻿using System;
+using System.Drawing.Printing;
+using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Forms;
+using System.Windows.Interop;
+
+using SlightPenLighter.Models;
+
+namespace SlightPenLighter.Hooks
 {
-    using System;
-    using System.Drawing.Printing;
-    using System.Runtime.InteropServices;
-    using System.Windows;
-    using System.Windows.Forms;
-    using System.Windows.Interop;
-
-    using SlightPenLighter.Models;
-
     public static class DwmHelper
     {
         [DllImport("dwmapi.dll", PreserveSig = true)]
@@ -24,11 +24,11 @@
         private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall,
-             ExactSpelling = true, SetLastError = true)]
+            ExactSpelling = true, SetLastError = true)]
         private static extern bool GetWindowRect(IntPtr hWnd, ref Bounds rect);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall,
-             ExactSpelling = true, SetLastError = true)]
+            ExactSpelling = true, SetLastError = true)]
         private static extern void MoveWindow(IntPtr hwnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
 
         private const int WsExTransparent = 0x00000020;

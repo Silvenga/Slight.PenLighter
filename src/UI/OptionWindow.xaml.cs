@@ -1,19 +1,19 @@
-﻿namespace SlightPenLighter.UI
+﻿using System;
+using System.ComponentModel;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
+using System.Windows.Threading;
+
+using SlightPenLighter.Annotations;
+using SlightPenLighter.Hooks;
+using SlightPenLighter.Models;
+
+namespace SlightPenLighter.UI
 {
-    using System;
-    using System.ComponentModel;
-    using System.IO;
-    using System.Runtime.CompilerServices;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Media;
-    using System.Windows.Shapes;
-    using System.Windows.Threading;
-
-    using SlightPenLighter.Annotations;
-    using SlightPenLighter.Hooks;
-    using SlightPenLighter.Models;
-
     public partial class OptionWindow : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -24,7 +24,7 @@
 
         public double Size
         {
-            get { return _size; }
+            get => _size;
             set
             {
                 _size = value;

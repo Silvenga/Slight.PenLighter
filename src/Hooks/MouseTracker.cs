@@ -1,11 +1,11 @@
-﻿namespace SlightPenLighter.Hooks
+﻿using System;
+using System.Windows.Threading;
+
+using SlightPenLighter.Models;
+using SlightPenLighter.UI;
+
+namespace SlightPenLighter.Hooks
 {
-    using System;
-    using System.Windows.Threading;
-
-    using SlightPenLighter.Models;
-    using SlightPenLighter.UI;
-
     public class MouseTracker
     {
         public IntPtr WindowPointer { get; set; }

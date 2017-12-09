@@ -1,11 +1,11 @@
+using System;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+
+using SlightPenLighter.Models;
+
 namespace SlightPenLighter.Hooks
 {
-    using System;
-    using System.ComponentModel;
-    using System.Runtime.InteropServices;
-
-    using SlightPenLighter.Models;
-
     public static class HookManager
     {
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]

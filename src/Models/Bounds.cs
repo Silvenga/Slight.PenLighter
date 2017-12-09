@@ -1,8 +1,8 @@
-﻿namespace SlightPenLighter.Models
-{
-    using System.Diagnostics.CodeAnalysis;
-    using System.Runtime.InteropServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 
+namespace SlightPenLighter.Models
+{
     [StructLayout(LayoutKind.Sequential)]
     [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Global")]
     public struct Bounds

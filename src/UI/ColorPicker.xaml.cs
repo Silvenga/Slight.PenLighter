@@ -1,11 +1,11 @@
-﻿namespace SlightPenLighter.UI
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows.Media;
+
+using SlightPenLighter.Annotations;
+
+namespace SlightPenLighter.UI
 {
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
-    using System.Windows.Media;
-
-    using SlightPenLighter.Annotations;
-
     public partial class ColorPicker : INotifyPropertyChanged
     {
         private readonly Color _startColor = new Color
@@ -20,7 +20,7 @@
 
         public byte A
         {
-            get { return ColorBrush.Color.A; }
+            get => ColorBrush.Color.A;
             set
             {
                 ColorBrush.Color = new Color
@@ -37,7 +37,7 @@
 
         public byte R
         {
-            get { return ColorBrush.Color.R; }
+            get => ColorBrush.Color.R;
             set
             {
                 ColorBrush.Color = new Color
@@ -54,7 +54,7 @@
 
         public byte G
         {
-            get { return ColorBrush.Color.G; }
+            get => ColorBrush.Color.G;
             set
             {
                 ColorBrush.Color = new Color
@@ -71,7 +71,7 @@
 
         public byte B
         {
-            get { return ColorBrush.Color.B; }
+            get => ColorBrush.Color.B;
             set
             {
                 ColorBrush.Color = new Color
@@ -88,7 +88,7 @@
 
         public Color Color
         {
-            get { return ColorBrush.Color; }
+            get => ColorBrush.Color;
             set
             {
                 ColorBrush.Color = value;
