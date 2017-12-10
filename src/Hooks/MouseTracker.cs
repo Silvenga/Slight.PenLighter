@@ -36,18 +36,21 @@ namespace SlightPenLighter.Hooks
 
             Highlighter.Dispatcher.Invoke(() =>
             {
+                var dpiRatio = bounds.Width / Highlighter.Width;
+                Console.WriteLine(next.X + ","+ next.Y);
+
                 if (withinPaintX && withinPaintY)
                 {
-                    Canvas.SetTop(Highlighter.Lighter, next.Y - bounds.Top - Highlighter.Lighter.Height / 2);
-                    Canvas.SetLeft(Highlighter.Lighter, next.X - bounds.Left - Highlighter.Lighter.Width / 2);
+                    Canvas.SetTop(Highlighter.Lighter, (next.Y - bounds.Top - Highlighter.Lighter.Height / 2) / dpiRatio);
+                    Canvas.SetLeft(Highlighter.Lighter, (next.X - bounds.Left - Highlighter.Lighter.Width / 2) / dpiRatio);
                 }
                 else
                 {
                     var screen = Screen.FromPoint(new Point(next.X, next.Y));
                     DwmHelper.MoveWindow(WindowPointer, screen.Bounds.X, screen.Bounds.Y, screen.Bounds.Width, screen.Bounds.Height);
 
-                    Canvas.SetTop(Highlighter.Lighter, 0 - Highlighter.Lighter.Height);
-                    Canvas.SetLeft(Highlighter.Lighter, 0 - Highlighter.Lighter.Width);
+                    Canvas.SetTop(Highlighter.Lighter, (0 - Highlighter.Lighter.Height) / dpiRatio);
+                    Canvas.SetLeft(Highlighter.Lighter, (0 - Highlighter.Lighter.Width) / dpiRatio);
                 }
             });
         }
