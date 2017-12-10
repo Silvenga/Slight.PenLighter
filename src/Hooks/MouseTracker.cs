@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Forms;
-using System.Windows.Threading;
 
 using SlightPenLighter.Models;
 using SlightPenLighter.UI;
