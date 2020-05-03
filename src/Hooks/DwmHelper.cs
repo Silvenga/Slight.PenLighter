@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-
 using SlightPenLighter.Models;
 
 namespace SlightPenLighter.Hooks
@@ -22,12 +21,12 @@ namespace SlightPenLighter.Hooks
         private static extern void MoveWindow(IntPtr hwnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
 
         private const int WsExTransparent = 0x00000020;
-        private const int GwlExstyle = -20;
+        private const int GwlExStyle = -20;
 
         public static void SetWindowExTransparent(IntPtr hwnd)
         {
-            var style = GetWindowLong(hwnd, GwlExstyle);
-            SetWindowLong(hwnd, GwlExstyle, style | WsExTransparent);
+            var style = GetWindowLong(hwnd, GwlExStyle);
+            SetWindowLong(hwnd, GwlExStyle, style | WsExTransparent);
         }
 
         public static Bounds GetWindowBounds(IntPtr id)

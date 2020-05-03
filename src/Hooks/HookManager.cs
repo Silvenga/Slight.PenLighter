@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-
 using SlightPenLighter.Models;
 
 namespace SlightPenLighter.Hooks
@@ -61,7 +60,8 @@ namespace SlightPenLighter.Hooks
             }
         }
 
-        private readonly BlockingCollection<(int nCode, int wParam, IntPtr lParam)> _eventQueue = new BlockingCollection<(int nCode, int wParam, IntPtr lParam)>(10);
+        private readonly BlockingCollection<(int nCode, int wParam, IntPtr lParam)> _eventQueue =
+            new BlockingCollection<(int nCode, int wParam, IntPtr lParam)>(10);
 
         private delegate int Hook(int nCode, int wParam, IntPtr lParam);
 
@@ -75,26 +75,21 @@ namespace SlightPenLighter.Hooks
         {
             Task.Run(() =>
             {
-                foreach ((var nCode, var wParam, var lParam) in _eventQueue.GetConsumingEnumerable())
+                foreach (var (nCode, wParam, lParam) in _eventQueue.GetConsumingEnumerable())
                 {
                     HandleEvent(nCode, wParam, lParam);
                 }
             });
         }
 
-        private int MouseHookProc(int nCode, int wParam, IntPtr lParam)
-        {
-            _eventQueue.TryAdd((nCode, wParam, lParam));
-            return CallNextHookEx(_mouseHookHandle, nCode, wParam, lParam);
-        }
-
         private void HandleEvent(int nCode, int wParam, IntPtr lParam)
         {
             if (nCode >= 0)
             {
-                var mouseHook = (MouseHook)Marshal.PtrToStructure(lParam, typeof(MouseHook));
+                var mouseHook = (MouseHook) Marshal.PtrToStructure(lParam, typeof(MouseHook));
 
-                if (MouseMoveBackend != null && mouseHook.PhysicalPoint.X != -1 && mouseHook.PhysicalPoint.Y != -1 && (_oldX != mouseHook.PhysicalPoint.X || _oldY != mouseHook.PhysicalPoint.Y))
+                if (MouseMoveBackend != null && mouseHook.PhysicalPoint.X != -1 && mouseHook.PhysicalPoint.Y != -1
+                    && (_oldX != mouseHook.PhysicalPoint.X || _oldY != mouseHook.PhysicalPoint.Y))
                 {
                     _oldX = mouseHook.PhysicalPoint.X;
                     _oldY = mouseHook.PhysicalPoint.Y;
@@ -131,15 +126,21 @@ namespace SlightPenLighter.Hooks
             }
         }
 
+        private int MouseHookProc(int nCode, int wParam, IntPtr lParam)
+        {
+            _eventQueue.TryAdd((nCode, wParam, lParam));
+            return CallNextHookEx(_mouseHookHandle, nCode, wParam, lParam);
+        }
+
         private void TryUnsubscribeFromGlobalMouseEvents()
         {
             if (MouseMoveBackend == null && MouseClickBackend == null)
             {
-                ForceUnsunscribeFromGlobalMouseEvents();
+                ForceUnsubscribeFromGlobalMouseEvents();
             }
         }
 
-        private void ForceUnsunscribeFromGlobalMouseEvents()
+        private void ForceUnsubscribeFromGlobalMouseEvents()
         {
             if (_mouseHookHandle != 0)
             {

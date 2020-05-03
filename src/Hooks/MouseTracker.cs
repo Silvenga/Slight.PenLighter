@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Forms;
-
 using SlightPenLighter.Models;
 using SlightPenLighter.UI;
 
@@ -37,7 +36,7 @@ namespace SlightPenLighter.Hooks
             Highlighter.Dispatcher.Invoke(() =>
             {
                 var dpiRatio = bounds.Width / Highlighter.Width;
-                Console.WriteLine(next.X + ","+ next.Y);
+                Console.WriteLine(next.X + "," + next.Y);
 
                 if (withinPaintX && withinPaintY)
                 {

@@ -4,10 +4,8 @@ using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Threading;
-
 using SlightPenLighter.Annotations;
 using SlightPenLighter.Hooks;
-
 using Application = System.Windows.Application;
 
 namespace SlightPenLighter.UI
@@ -36,6 +34,7 @@ namespace SlightPenLighter.UI
                 {
                     return;
                 }
+
                 _clickEvent = value;
                 OnPropertyChanged();
             }

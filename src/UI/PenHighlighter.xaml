@@ -41,7 +41,7 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    <Canvas x:Name="Canvas" >
-        <Ellipse x:Name="Lighter" Style="{StaticResource PulseStyle}"/>
+    <Canvas x:Name="Canvas">
+        <Ellipse x:Name="Lighter" Style="{StaticResource PulseStyle}" />
     </Canvas>
 </Window>
