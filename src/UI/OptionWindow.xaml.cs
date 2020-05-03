@@ -48,7 +48,7 @@ namespace SlightPenLighter.UI
             {
                 string settingsFileName;
 
-                var exeFileName = new FileInfo(Process.GetCurrentProcess().MainModule.FileName);
+                var exeFileName = new FileInfo(Process.GetCurrentProcess().MainModule?.FileName ?? "SlightPenLighter");
                 if (!exeFileName.Exists || exeFileName.Directory == null)
                 {
                     settingsFileName = exeFileName.Name + ".json";
