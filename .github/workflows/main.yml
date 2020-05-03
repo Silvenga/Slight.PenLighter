@@ -1,0 +1,28 @@
+name: CI
+
+on: 
+  push:
+    branches:
+    - 'master'
+    tags:
+    - '*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: microsoft/setup-msbuild@v1.0.0
+    - uses: nuget/setup-nuget@v1
+
+    - name: Restore
+      run: nuget restore
+    - name: Build
+      run: msbuild ./SlightPenLighter.sln /p:Configuration=Release
+
+    - name: Publish (On Release Tags)
+      uses: ncipollo/release-action@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        artifact: 'src\bin\Release\SlightPenLighter.exe'
+        token: ${{ secrets.GITHUB_TOKEN }}
