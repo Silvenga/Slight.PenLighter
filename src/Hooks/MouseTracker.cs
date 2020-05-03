@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -9,22 +8,23 @@ using SlightPenLighter.UI;
 
 namespace SlightPenLighter.Hooks
 {
-    public class MouseTracker
+    public class MouseTracker : IDisposable
     {
-        public IntPtr WindowPointer { get; set; }
+        private readonly HookManager _hookManager = new HookManager();
 
-        public PenHighlighter Highlighter { get; private set; }
+        public IntPtr WindowPointer { get; }
+
+        public PenHighlighter Highlighter { get; }
 
         public MouseTracker(IntPtr window, PenHighlighter highlighter)
         {
             WindowPointer = window;
             Highlighter = highlighter;
 
-            var hookManager = new HookManager();
-            hookManager.MouseMove += HookManagerOnMouseMove;
-            hookManager.MouseClick += HookManagerOnMouseClick;
+            _hookManager.MouseMove += HookManagerOnMouseMove;
+            _hookManager.MouseClick += HookManagerOnMouseClick;
 
-            hookManager.Start();
+            _hookManager.Start();
         }
 
         private void HookManagerOnMouseMove(PhysicalPoint next)
@@ -36,7 +36,6 @@ namespace SlightPenLighter.Hooks
             Highlighter.Dispatcher.Invoke(() =>
             {
                 var dpiRatio = bounds.Width / Highlighter.Width;
-                Console.WriteLine(next.X + "," + next.Y);
 
                 if (withinPaintX && withinPaintY)
                 {
@@ -56,12 +55,20 @@ namespace SlightPenLighter.Hooks
 
         private void HookManagerOnMouseClick()
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 Highlighter.ClickEvent = true;
-                Thread.Sleep(5);
+                await Task.Delay(5);
                 Highlighter.ClickEvent = false;
             });
+        }
+
+        public void Dispose()
+        {
+            _hookManager.MouseMove -= HookManagerOnMouseMove;
+            _hookManager.MouseClick -= HookManagerOnMouseClick;
+
+            _hookManager?.Dispose();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Threading;
@@ -52,9 +53,14 @@ namespace SlightPenLighter.UI
             Left = 0;
         }
 
-        private void MainWindow_OnSourceInitialized(object sender, EventArgs e)
+        private void PenHighlighter_OnLoaded(object sender, EventArgs e)
         {
             Dispatcher.Invoke(new Action(OnSourceInitialized), DispatcherPriority.ContextIdle, null);
+        }
+
+        private void PenHighlighter_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            Dispatcher.Invoke(new Action(OnSourceUninitialized), DispatcherPriority.ContextIdle, null);
         }
 
         private void OnSourceInitialized()
@@ -64,6 +70,11 @@ namespace SlightPenLighter.UI
             MouseTracker = new MouseTracker(WindowPointer, this);
 
             OptionWindow = new OptionWindow(this);
+        }
+
+        private void OnSourceUninitialized()
+        {
+            MouseTracker.Dispose();
         }
 
         private void CreateIcon()

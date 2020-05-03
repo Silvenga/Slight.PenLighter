@@ -2,33 +2,35 @@ using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using SlightPenLighter.Models;
 
 namespace SlightPenLighter.Hooks
 {
-    public class HookManager
+    public delegate void MousePointChange(PhysicalPoint physicalPoint);
+
+    public delegate void MouseClickHandler();
+
+    public class HookManager : IDisposable
     {
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        private static extern int CallNextHookEx(int idHook, int nCode, int wParam, IntPtr lParam);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        private static extern int SetWindowsHookEx(int idHook, Hook hook, IntPtr hMod, int dwThreadId);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        private static extern int UnhookWindowsHookEx(int idHook);
-
         private const int WhMouseLl = 14;
         private const int WmLButtonDown = 513;
         private const int WmRButtonDown = 516;
         private const int WmMButtonDown = 519;
 
-        public delegate void MousePointChange(PhysicalPoint physicalPoint);
+        private readonly CancellationTokenSource _cancellationSource = new CancellationTokenSource();
 
-        public delegate void MouseClickHandler();
+        private readonly BlockingCollection<(int nCode, int wParam, IntPtr lParam)> _eventQueue =
+            new BlockingCollection<(int nCode, int wParam, IntPtr lParam)>(10);
 
         private event MousePointChange MouseMoveBackend;
         private event MouseClickHandler MouseClickBackend;
+
+        private Hook _mouseDelegate;
+        private int _mouseHookHandle;
+        private int _oldX;
+        private int _oldY;
 
         public event MousePointChange MouseMove
         {
@@ -38,11 +40,7 @@ namespace SlightPenLighter.Hooks
                 MouseMoveBackend += value;
             }
 
-            remove
-            {
-                MouseMoveBackend -= value;
-                TryUnsubscribeFromGlobalMouseEvents();
-            }
+            remove => MouseMoveBackend -= value;
         }
 
         public event MouseClickHandler MouseClick
@@ -53,33 +51,20 @@ namespace SlightPenLighter.Hooks
                 MouseClickBackend += value;
             }
 
-            remove
-            {
-                MouseClickBackend -= value;
-                TryUnsubscribeFromGlobalMouseEvents();
-            }
+            remove => MouseClickBackend -= value;
         }
-
-        private readonly BlockingCollection<(int nCode, int wParam, IntPtr lParam)> _eventQueue =
-            new BlockingCollection<(int nCode, int wParam, IntPtr lParam)>(10);
-
-        private delegate int Hook(int nCode, int wParam, IntPtr lParam);
-
-        private Hook _mouseDelegate;
-
-        private int _mouseHookHandle;
-        private int _oldX;
-        private int _oldY;
 
         public void Start()
         {
-            Task.Run(() =>
+            Task.Run(ConsumeQueue, _cancellationSource.Token);
+        }
+
+        private void ConsumeQueue()
+        {
+            foreach (var (nCode, wParam, lParam) in _eventQueue.GetConsumingEnumerable(_cancellationSource.Token))
             {
-                foreach (var (nCode, wParam, lParam) in _eventQueue.GetConsumingEnumerable())
-                {
-                    HandleEvent(nCode, wParam, lParam);
-                }
-            });
+                HandleEvent(nCode, wParam, lParam);
+            }
         }
 
         private void HandleEvent(int nCode, int wParam, IntPtr lParam)
@@ -156,5 +141,23 @@ namespace SlightPenLighter.Hooks
                 }
             }
         }
+
+        public void Dispose()
+        {
+            _cancellationSource.Cancel();
+            _eventQueue?.Dispose();
+            TryUnsubscribeFromGlobalMouseEvents();
+        }
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        private static extern int CallNextHookEx(int idHook, int nCode, int wParam, IntPtr lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        private static extern int SetWindowsHookEx(int idHook, Hook hook, IntPtr hMod, int dwThreadId);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        private static extern int UnhookWindowsHookEx(int idHook);
+
+        private delegate int Hook(int nCode, int wParam, IntPtr lParam);
     }
 }
