@@ -27,40 +27,39 @@ namespace SlightPenLighter.Hooks
             _hookManager.Start();
         }
 
-        private void HookManagerOnMouseMove(PhysicalPoint next)
+        private async void HookManagerOnMouseMove(PhysicalPoint next)
         {
             var bounds = DwmHelper.GetWindowBounds(WindowPointer);
             var withinPaintX = next.X >= bounds.Left && next.X <= bounds.Right;
             var withinPaintY = next.Y >= bounds.Top && next.Y <= bounds.Bottom;
 
-            Highlighter.Dispatcher.Invoke(() =>
-            {
-                var dpiRatio = bounds.Width / Highlighter.Width;
-
-                if (withinPaintX && withinPaintY)
-                {
-                    Canvas.SetTop(Highlighter.Lighter, (next.Y - bounds.Top - Highlighter.Lighter.Height / 2) / dpiRatio);
-                    Canvas.SetLeft(Highlighter.Lighter, (next.X - bounds.Left - Highlighter.Lighter.Width / 2) / dpiRatio);
-                }
-                else
-                {
-                    var screen = Screen.FromPoint(new Point(next.X, next.Y));
-                    DwmHelper.MoveWindow(WindowPointer, screen.Bounds.X, screen.Bounds.Y, screen.Bounds.Width, screen.Bounds.Height);
-
-                    Canvas.SetTop(Highlighter.Lighter, (0 - Highlighter.Lighter.Height) / dpiRatio);
-                    Canvas.SetLeft(Highlighter.Lighter, (0 - Highlighter.Lighter.Width) / dpiRatio);
-                }
-            });
+            await Highlighter.Dispatcher.InvokeAsync(() => { DispatchUpdate(next, bounds, withinPaintX, withinPaintY); });
         }
 
-        private void HookManagerOnMouseClick()
+        private void DispatchUpdate(PhysicalPoint next, Bounds bounds, bool withinPaintX, bool withinPaintY)
         {
-            Task.Run(async () =>
+            var dpiRatio = bounds.Width / Highlighter.Width;
+
+            if (withinPaintX && withinPaintY)
             {
-                Highlighter.ClickEvent = true;
-                await Task.Delay(5);
-                Highlighter.ClickEvent = false;
-            });
+                Canvas.SetTop(Highlighter.Lighter, (next.Y - bounds.Top - Highlighter.Lighter.Height / 2) / dpiRatio);
+                Canvas.SetLeft(Highlighter.Lighter, (next.X - bounds.Left - Highlighter.Lighter.Width / 2) / dpiRatio);
+            }
+            else
+            {
+                var screen = Screen.FromPoint(new Point(next.X, next.Y));
+                DwmHelper.MoveWindow(WindowPointer, screen.Bounds.X, screen.Bounds.Y, screen.Bounds.Width, screen.Bounds.Height);
+
+                Canvas.SetTop(Highlighter.Lighter, (0 - Highlighter.Lighter.Height) / dpiRatio);
+                Canvas.SetLeft(Highlighter.Lighter, (0 - Highlighter.Lighter.Width) / dpiRatio);
+            }
+        }
+
+        private async void HookManagerOnMouseClick()
+        {
+            Highlighter.ClickEvent = true;
+            await Task.Delay(5);
+            Highlighter.ClickEvent = false;
         }
 
         public void Dispose()
